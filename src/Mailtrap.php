@@ -206,6 +206,15 @@ class Mailtrap extends Module
     }
 
     /**
+     * Abstract "contains" method
+     */
+    public function receiveAnEmailThatContains($expected, $key, $msg)
+    {
+        $email = $this->fetchLastMessage();
+        $this->assertContains($expected, $email[$key], $msg);
+    }
+
+    /**
      * Look for a string in the most recent email (Text).
      *
      * @param $expected
@@ -214,8 +223,7 @@ class Mailtrap extends Module
      */
     public function seeInEmailTextBody($expected)
     {
-        $email = $this->fetchLastMessage();
-        $this->assertContains($expected, $email['text_body'], 'Email body contains text');
+        $this->receiveAnEmailThatContains($expected, 'text_body', 'Email body contains text');
     }
 
     /**
@@ -227,7 +235,18 @@ class Mailtrap extends Module
      */
     public function seeInEmailHtmlBody($expected)
     {
-        $email = $this->fetchLastMessage();
-        $this->assertContains($expected, $email['html_body'], 'Email body contains HTML');
+        $this->receiveAnEmailThatContains($expected, 'html_body', 'Email body contains HTML');
+    }
+
+    /**
+     * Look for a string in the most recent email tile
+     *
+     * @param $expected
+     *
+     * @return mixed
+     */
+    public function seeInEmailTitle($expected)
+    {
+        $this->receiveAnEmailThatContains($expected, 'subject', 'Email Subject contains string');
     }
 }
